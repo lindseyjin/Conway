@@ -1,11 +1,5 @@
 # Conway
 Conway's game of life is a "cellular automaton" invented by John Conway that models evolution of systems and complex life forms.
-This game takes the form of a set of mathetmatical rules, as follows:
+This game takes the form of a set of mathetmatical rules.
 
-For a populated cell:
-    0-1 neighbours: dies
-    4+ neighbours: dies
-    2-3 neighbours: survives
-
-For an unpopulated cell:
-    3 neighbours: becomes populated
+Populated cells with 0-1 neighbours or 4+ neighbours will "die" and become unpopulated, as if by isolation and overcrowding. Unpopulated cells with 3 neighbours become populated.
