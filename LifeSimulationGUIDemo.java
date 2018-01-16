@@ -13,27 +13,30 @@ class LifeSimulationGUIDemo extends JFrame
     private static Timer t;
 
     //Data fields for mouselistener
-    public static Point point = new Point (0,0);
-    public int  x = 0, y = 0, width = 0, height = 0, w1 = 0, h1 = 0;
+    private static Point point = new Point (0,0);
+    private int  x = 0, y = 0, width = 0, height = 0, w1 = 0, h1 = 0;
     Rectangle rect = new Rectangle (); //user creates a rectangle as they click and drag
     private static boolean dragging = false;
+    private static JButton simulateBtn;
 
     //======================================================== constructor
     public LifeSimulationGUIDemo ()
     {   
-        // 1... Create/initialize components
+        //Create/initialize components
 
         //create mousemotionlistener and mouselistener
         MovingAdapter ma = new MovingAdapter();
         addMouseMotionListener(ma);
         addMouseListener(new ClickingAdapter());
 
-        // listener for all buttons
+        //listener for all buttons
         BtnListener btnListener = new BtnListener (); 
 
         //create buttons
-        JButton simulateBtn = new JButton ("Simulate");
+        simulateBtn = new JButton ("Simulate");
         simulateBtn.addActionListener (btnListener);
+        JButton pauseBtn = new JButton ("Pause");
+        pauseBtn.addActionListener (btnListener);
         JButton advanceBtn = new JButton ("Advance");
         advanceBtn.addActionListener (btnListener);
         JButton populateBtn = new JButton ("Populate");
@@ -55,7 +58,7 @@ class LifeSimulationGUIDemo extends JFrame
 
         DrawArea board = new DrawArea (500, 500);
 
-        // 3... Add the components to the input area.
+        // 3 Add the components to the input area.
         north.add (simulateBtn);
         north.add (populateBtn);
         north.add (eradicateBtn);
@@ -65,7 +68,7 @@ class LifeSimulationGUIDemo extends JFrame
         content.add (north, "North"); // Input area
         content.add (board, "South"); // Output area
 
-        // 4... Set this window's attributes.
+        // 4 Set this window's attributes.
         setContentPane (content);
         pack ();
         setTitle ("Life Simulation");
@@ -73,10 +76,10 @@ class LifeSimulationGUIDemo extends JFrame
         setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo (null);           // Center window.
     }
-
+   
     class BtnListener implements ActionListener 
-    {
-        public void actionPerformed (ActionEvent e)
+    { 
+    	public void actionPerformed (ActionEvent e)
         {
             //coordinates of where user clicked and dragged
             int nlength, mlength;
@@ -87,10 +90,16 @@ class LifeSimulationGUIDemo extends JFrame
 
             if (e.getActionCommand ().equals ("Simulate")) 
             {
-                Movement moveColony = new Movement (); // ActionListener for Timer
+                simulateBtn.setText("Pause"); //rename button 
+            	Movement moveColony = new Movement (); // ActionListener for Timer
                 t = new Timer (200, moveColony); // set up Movement to run every 200 milliseconds
                 t.start (); // start simulation
             }
+            else if (e.getActionCommand ().equals ("Pause")) 
+            {
+                t.stop (); // pause simulation
+                simulateBtn.setText("Simulate"); //rename button
+            } 
             else if (e.getActionCommand ().equals ("Populate")) 
             {
                 dragging = false; //closes rectangle
@@ -117,12 +126,13 @@ class LifeSimulationGUIDemo extends JFrame
         public void mouseDragged (MouseEvent e) 
         {
             //get coordinates of current mouse location
-            w1 = e.getX(); 
-            h1 = e.getY(); 
+            w1 = e.getX() - 10; 
+            h1 = e.getY() - 60; 
+            
             //find width and height of the rectangle user has created
             width = Math.abs(w1 - x);
-            height = Math.abs(h1 - y - 50);
-
+            height = Math.abs(h1 - y);
+            
             if (dragging)
                 repaint (); //update rectangle display
         }
